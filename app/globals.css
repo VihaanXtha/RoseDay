@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+  --font-dancing: var(--font-dancing);
+  --font-poppins: var(--font-poppins);
+  
+  --color-burgundy: #8B0000;
+  --color-rose-gold: #B76E79;
+  --color-purple: #4B0082;
+  --color-dark-bg: #24111e;
+  --color-ethereal-pink: #FFB6C1;
+  --color-gold: #FFD700;
+}
+
+:root {
+  --background: #24111e;
+  --foreground: #ededed;
+}
+
+body {
+  background: radial-gradient(circle, #82707a, #24111e 100%);
+  color: var(--foreground);
+  font-family: var(--font-poppins);
+  min-height: 100vh;
+}
+
+@layer utilities {
+  .text-glow {
+    text-shadow: 0 0 10px rgba(255, 182, 193, 0.5);
+  }
+  
+  .magical-gradient {
+    background: radial-gradient(circle, #82707a, #24111e 100%);
+  }
+}
