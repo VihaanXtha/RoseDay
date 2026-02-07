@@ -112,12 +112,12 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
 
   const roses = useMemo(() => {
       if (isMobile) {
-          // 100x Smoother Logic:
-          // Reduce count to just 40 (half of previous 80)
-          // Scale them up significantly to fill the volume
-          return allRoses.slice(0, 40).map(rose => ({
+          // Mobile Logic:
+          // Use exactly 100 roses
+          // Reduced scale compared to the previous 3.5x multiplier to make them "smaller" but still visible
+          return allRoses.slice(0, 100).map(rose => ({
               ...rose,
-              scale: rose.scale * 3.5 // Scale up 3.5x to look full with few items
+              scale: rose.scale * 1.5 // Reduced from 3.5 to 1.5
           }));
       }
       return allRoses;
