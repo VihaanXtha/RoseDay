@@ -18,8 +18,8 @@
 }
 
 body {
-  background: radial-gradient(circle, #a8909c, #2e1626 100%);
-  color: var(--foreground);
+  background: radial-gradient(circle, #fce7f3, #fbcfe8 100%);
+  color: #881337;
   font-family: var(--font-poppins);
   min-height: 100vh;
 }
@@ -30,6 +30,6 @@ body {
   }
   
   .magical-gradient {
-    background: radial-gradient(circle, #82707a, #24111e 100%);
+    background: radial-gradient(circle, #fce7f3, #fbcfe8 100%);
   }
 }

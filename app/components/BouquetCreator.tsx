@@ -159,8 +159,8 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
             <spotLight position={[0, 10, 0]} intensity={1} angle={0.5} penumbra={1} />
 
             {/* Environment */}
-            <Environment preset="night" />
-            <fog attach="fog" args={['#050505', 5, 25]} />
+            <Environment preset="city" />
+            <fog attach="fog" args={['#fce7f3', 8, 30]} />
 
             {/* The Bouquet */}
             <group position={[0, -1, 0]}>
@@ -179,7 +179,7 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
             {/* Ground/Vase Base (Optional) */}
             <mesh position={[0, -2, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
                 <circleGeometry args={[5, 32]} />
-                <meshStandardMaterial color="#0a0a0a" opacity={0.5} transparent />
+                <meshStandardMaterial color="#fce7f3" opacity={0.3} transparent />
             </mesh>
         </Suspense>
       </Canvas>
