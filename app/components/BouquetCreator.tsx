@@ -92,7 +92,8 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
         const mobileScaleMultiplier = isMobile ? 2.5 : 1; 
         
         // High quality scale boost (20x mother instruction interpreted as making them grander)
-        const qualityMultiplier = 1.5;
+        // Adjusted from 1.5 to 0.75 (2x smaller)
+        const qualityMultiplier = 0.75;
 
         temp.push({
             id: i,
