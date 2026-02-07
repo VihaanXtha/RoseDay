@@ -18,7 +18,7 @@
 }
 
 body {
-  background: radial-gradient(circle, #82707a, #24111e 100%);
+  background: radial-gradient(circle, #a8909c, #2e1626 100%);
   color: var(--foreground);
   font-family: var(--font-poppins);
   min-height: 100vh;

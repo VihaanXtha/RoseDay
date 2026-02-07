@@ -59,19 +59,79 @@ export const Rose3D: React.FC<Rose3DProps> = ({
     }
   };
 
+  const MotionMesh = motion.mesh as any;
+  const MotionGroup = motion.group as any;
+
+  // Generate random leaves along the stem
+  const leaves = useMemo(() => {
+    const leafCount = Math.floor(Math.random() * 2) + 1; // 1 or 2 leaves per stem
+    const items = [];
+    for (let i = 0; i < leafCount; i++) {
+        // Position along the curve (0.2 to 0.8)
+        const t = 0.3 + (Math.random() * 0.4); 
+        const point = curve.getPoint(t);
+        const tangent = curve.getTangent(t);
+        
+        // Random rotation around the stem
+        const angle = Math.random() * Math.PI * 2;
+        
+        // Create a leaf geometry (simple plane or flattened cone)
+        // We'll use a simple cone scaled to look like a leaf
+        
+        items.push({
+            id: i,
+            point,
+            tangent,
+            angle,
+            scale: scale * (0.8 + Math.random() * 0.4),
+            delay: delay + (t * 2) // Grow as stem reaches this point
+        });
+    }
+    return items;
+  }, [curve, scale, delay]);
+
   return (
     <group>
       {/* Stem growing from origin (assumes curve starts at 0,0,0) */}
-      <motion.mesh 
+      <MotionMesh 
         geometry={stemGeo} 
         position={[startPoint.x, startPoint.y, startPoint.z]}
-        // @ts-ignore
         initial="hidden"
         animate="visible"
         variants={stemVariants}
       >
         <meshStandardMaterial color="#1b4332" roughness={0.8} transparent opacity={1} />
-      </motion.mesh>
+      </MotionMesh>
+
+      {/* Leaves */}
+      {leaves.map((leaf, i) => {
+         // Calculate orientation for leaf
+         // We want it perpendicular to stem tangent
+         const up = new THREE.Vector3(0, 1, 0);
+         const stemQuat = new THREE.Quaternion().setFromUnitVectors(up, leaf.tangent);
+         
+         // Rotate around stem
+         const leafRot = new THREE.Euler(0, leaf.angle, Math.PI / 3); // Tilt out 60 degrees
+         const leafQuat = new THREE.Quaternion().setFromEuler(leafRot);
+         
+         // Combine rotations
+         const finalQuat = stemQuat.multiply(leafQuat);
+         const finalEuler = new THREE.Euler().setFromQuaternion(finalQuat);
+
+         return (
+            <MotionMesh
+                key={`leaf-${i}`}
+                position={[leaf.point.x, leaf.point.y, leaf.point.z]}
+                rotation={finalEuler}
+                initial={{ scale: 0 }}
+                animate={{ scale: leaf.scale }}
+                transition={{ duration: 1, delay: leaf.delay }}
+            >
+                <coneGeometry args={[0.03 * scale, 0.15 * scale, 4]} />
+                <meshStandardMaterial color="#2d6a4f" side={THREE.DoubleSide} />
+            </MotionMesh>
+         );
+      })}
 
       {/* Flower Head */}
       <motion.group
