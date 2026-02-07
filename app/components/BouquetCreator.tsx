@@ -43,12 +43,9 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
   const [controlsEnabled, setControlsEnabled] = useState(true);
 
   // Generate 800 Roses Configuration for a fuller top view
-  const roses = useMemo(() => {
+  const allRoses = useMemo(() => {
     const temp = [];
-    // Adjust count based on device performance (screen width check)
-    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-    // drastically reduce count for mobile for 20x smoothness
-    const count = isMobile ? 80 : 800; 
+    const count = 800; 
     
     // Golden angle for spiral distribution
     const phi = Math.PI * (3 - Math.sqrt(5)); 
@@ -70,7 +67,7 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
         
         // End points fan out
         // Reduce spread to pack them tighter
-        const spread = isMobile ? 4.5 : 5.5; // Slightly wider to separate stems further
+        const spread = 5.5; 
         const height = 1 + Math.random() * 2; // Varied height
         
         const endX = x * spread;
@@ -88,9 +85,6 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
         // Create curve
         const curve = new THREE.CatmullRomCurve3([start, mid, end]);
         
-        // Increase scale on mobile so the bouquet still looks full despite fewer roses
-        const mobileScaleMultiplier = isMobile ? 2.5 : 1; 
-        
         // High quality scale boost (20x mother instruction interpreted as making them grander)
         // Adjusted from 1.5 to 0.75 (2x smaller)
         const qualityMultiplier = 0.75;
@@ -100,16 +94,34 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
             curve,
             // Randomize delay for organic growth
             delay: Math.random() * 3.0, // Slightly longer duration for more roses 
-            // Varied scales - Bigger flowers (2x)
-            // Original small: 0.01 ... 0.02
-            // 2x bigger: 0.02 ... 0.04
-            scale: (0.025 + Math.random() * 0.025) * (1 + y * 0.2) * mobileScaleMultiplier * qualityMultiplier,
+            // Varied scales
+            scale: (0.025 + Math.random() * 0.025) * (1 + y * 0.2) * qualityMultiplier,
             color: Math.random() > 0.6 ? "#ff4d6d" : "#d00000" // Mix of red and pink
         });
     }
     return temp;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    setIsMobile(typeof window !== 'undefined' && window.innerWidth < 768);
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const roses = useMemo(() => {
+      if (isMobile) {
+          // 100x Smoother Logic:
+          // Reduce count to just 40 (half of previous 80)
+          // Scale them up significantly to fill the volume
+          return allRoses.slice(0, 40).map(rose => ({
+              ...rose,
+              scale: rose.scale * 3.5 // Scale up 3.5x to look full with few items
+          }));
+      }
+      return allRoses;
+  }, [allRoses, isMobile]);
 
   useEffect(() => {
     // Sequence logic
@@ -130,7 +142,7 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
     <div className="w-full h-screen bg-transparent relative">
       <Loader />
       {/* 3D Scene */}
-      <Canvas shadows={false} dpr={[1, 1.5]} performance={{ min: 0.5 }}>
+      <Canvas shadows={false} dpr={[1, 1]} performance={{ min: 0.5 }}>
         <Suspense fallback={null}>
             <PerspectiveCamera makeDefault position={[0, 6, 8]} fov={50} />
             
