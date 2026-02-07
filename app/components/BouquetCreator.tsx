@@ -1,4 +1,4 @@
-'use client';
+dont show the 'use client';
 
 import React, { useState, useEffect, useMemo, useRef, Suspense } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
@@ -24,8 +24,8 @@ const CameraRig = ({ step, onTransitionEnd }: { step: string, onTransitionEnd: (
   useFrame((state) => {
     if (step === 'complete' && transitionRef.current) {
       // Smoothly transition to top view
-      // Zoom out more: Increase Y from 14 -> 18, Z from 0.1 -> 0.1
-      vec.set(0, 18, 0.1); 
+      // Zoom out more: Increase Y from 18 -> 24 (further out), Z from 0.1 -> 0.1
+      vec.set(0, 24, 0.1); 
       state.camera.position.lerp(vec, 0.02);
       state.camera.lookAt(0, 0, 0);
       
@@ -70,7 +70,7 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
         
         // End points fan out
         // Reduce spread to pack them tighter
-        const spread = isMobile ? 4.0 : 5.0; // Slightly tighter spread for fewer roses on mobile
+        const spread = isMobile ? 4.5 : 5.5; // Slightly wider to separate stems further
         const height = 1 + Math.random() * 2; // Varied height
         
         const endX = x * spread;
@@ -129,7 +129,7 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
     <div className="w-full h-screen bg-transparent relative">
       <Loader />
       {/* 3D Scene */}
-      <Canvas shadows={typeof window !== 'undefined' && window.innerWidth > 768} dpr={[1, 1.5]} performance={{ min: 0.5 }}>
+      <Canvas shadows={false} dpr={[1, 1.5]} performance={{ min: 0.5 }}>
         <Suspense fallback={null}>
             <PerspectiveCamera makeDefault position={[0, 6, 8]} fov={50} />
             
@@ -151,7 +151,7 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
             <directionalLight 
               position={[10, 10, 5]} 
               intensity={1.5} 
-              castShadow={typeof window !== 'undefined' && window.innerWidth > 768} 
+              castShadow={false}
               shadow-mapSize={[512, 512]} // Reduced shadow map size for performance
             />
             <pointLight position={[-10, 5, -10]} intensity={0.8} color="#ff4d6d" />
