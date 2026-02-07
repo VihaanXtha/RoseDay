@@ -117,7 +117,8 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
           // Reduced scale compared to the previous 3.5x multiplier to make them "smaller" but still visible
           return allRoses.slice(0, 100).map(rose => ({
               ...rose,
-              scale: rose.scale * 1.5 // Reduced from 3.5 to 1.5
+              // Reduced from 1.5 to 0.75 (2x smaller) to match desktop "2x smaller" request
+              scale: rose.scale * 0.75 
           }));
       }
       return allRoses;
@@ -142,7 +143,7 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
     <div className="w-full h-screen bg-transparent relative">
       <Loader />
       {/* 3D Scene */}
-      <Canvas shadows={false} dpr={[1, 1]} performance={{ min: 0.5 }}>
+      <Canvas shadows={false} dpr={[1, 1]} performance={{ min: 0.1 }}>
         <Suspense fallback={null}>
             <PerspectiveCamera makeDefault position={[0, 6, 8]} fov={50} />
             
@@ -165,7 +166,7 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
               position={[10, 10, 5]} 
               intensity={1.5} 
               castShadow={false}
-              shadow-mapSize={[512, 512]} // Reduced shadow map size for performance
+              // Removed shadow-mapSize to ensure no shadow calc overhead
             />
             <pointLight position={[-10, 5, -10]} intensity={0.8} color="#ff4d6d" />
             <spotLight position={[0, 10, 0]} intensity={1} angle={0.5} penumbra={1} />
