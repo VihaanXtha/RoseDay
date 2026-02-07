@@ -44,7 +44,9 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
   // Generate 800 Roses Configuration for a fuller top view
   const roses = useMemo(() => {
     const temp = [];
-    const count = 800;
+    // Adjust count based on device performance (screen width check)
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    const count = isMobile ? 300 : 800; // Reduce count for mobile to prevent lag
     
     // Golden angle for spiral distribution
     const phi = Math.PI * (3 - Math.sqrt(5)); 
@@ -118,7 +120,7 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
     <div className="w-full h-screen bg-transparent relative">
       <Loader />
       {/* 3D Scene */}
-      <Canvas shadows dpr={[1, 2]}>
+      <Canvas shadows dpr={[1, 1.5]} performance={{ min: 0.5 }}>
         <Suspense fallback={null}>
             <PerspectiveCamera makeDefault position={[0, 6, 8]} fov={50} />
             
@@ -138,10 +140,10 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
             {/* Lighting */}
             <ambientLight intensity={0.5} />
             <directionalLight 
-            position={[10, 10, 5]} 
-            intensity={1.5} 
-            castShadow 
-            shadow-mapSize={[1024, 1024]}
+              position={[10, 10, 5]} 
+              intensity={1.5} 
+              castShadow 
+              shadow-mapSize={[512, 512]} // Reduced shadow map size for performance
             />
             <pointLight position={[-10, 5, -10]} intensity={0.8} color="#ff4d6d" />
             <spotLight position={[0, 10, 0]} intensity={1} angle={0.5} penumbra={1} />

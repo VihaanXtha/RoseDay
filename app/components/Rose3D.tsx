@@ -24,7 +24,10 @@ export const Rose3D: React.FC<Rose3DProps> = ({
   const stemGeo = useMemo(() => {
     // Ensure minimum stem thickness so it's visible even when flower is tiny
     const radius = Math.max(0.04 * scale, 0.005);
-    const geo = new THREE.TubeGeometry(curve, 20, radius, 8, false);
+    // Reduced segments for performance optimization
+    const radialSegments = 6; // Reduced from 8
+    const tubularSegments = 12; // Reduced from 20
+    const geo = new THREE.TubeGeometry(curve, tubularSegments, radius, radialSegments, false);
     // Translate geometry so the start point is at (0,0,0) for correct scaling
     const start = curve.getPoint(0);
     geo.translate(-start.x, -start.y, -start.z);

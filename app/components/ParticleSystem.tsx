@@ -47,8 +47,17 @@ const ParticleSystem: React.FC<ParticleSystemProps> = ({ type, count }) => {
 
     // Animation loop
     let animationFrameId: number;
+    let lastTime = 0;
+    const fpsInterval = 1000 / 30; // Cap at 30 FPS for performance
 
-    const animate = () => {
+    const animate = (time: number) => {
+      animationFrameId = requestAnimationFrame(animate);
+
+      const elapsed = time - lastTime;
+      if (elapsed < fpsInterval) return;
+
+      lastTime = time - (elapsed % fpsInterval);
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       particles.forEach((p, index) => {
@@ -116,11 +125,9 @@ const ParticleSystem: React.FC<ParticleSystemProps> = ({ type, count }) => {
         
         ctx.restore();
       });
-
-      animationFrameId = requestAnimationFrame(animate);
     };
 
-    animate();
+    animationFrameId = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
