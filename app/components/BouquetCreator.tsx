@@ -46,7 +46,8 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
     const temp = [];
     // Adjust count based on device performance (screen width check)
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-    const count = isMobile ? 300 : 800; // Reduce count for mobile to prevent lag
+    // drastically reduce count for mobile for 20x smoothness
+    const count = isMobile ? 80 : 800; 
     
     // Golden angle for spiral distribution
     const phi = Math.PI * (3 - Math.sqrt(5)); 
@@ -68,7 +69,7 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
         
         // End points fan out
         // Reduce spread to pack them tighter
-        const spread = 5.0; 
+        const spread = isMobile ? 4.0 : 5.0; // Slightly tighter spread for fewer roses on mobile
         const height = 1 + Math.random() * 2; // Varied height
         
         const endX = x * spread;
@@ -86,6 +87,9 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
         // Create curve
         const curve = new THREE.CatmullRomCurve3([start, mid, end]);
         
+        // Increase scale on mobile so the bouquet still looks full despite fewer roses
+        const mobileScaleMultiplier = isMobile ? 2.5 : 1; 
+
         temp.push({
             id: i,
             curve,
@@ -94,11 +98,12 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
             // Varied scales - Bigger flowers (2x)
             // Original small: 0.01 ... 0.02
             // 2x bigger: 0.02 ... 0.04
-            scale: (0.025 + Math.random() * 0.025) * (1 + y * 0.2),
+            scale: (0.025 + Math.random() * 0.025) * (1 + y * 0.2) * mobileScaleMultiplier,
             color: Math.random() > 0.6 ? "#ff4d6d" : "#d00000" // Mix of red and pink
         });
     }
     return temp;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -120,7 +125,7 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
     <div className="w-full h-screen bg-transparent relative">
       <Loader />
       {/* 3D Scene */}
-      <Canvas shadows dpr={[1, 1.5]} performance={{ min: 0.5 }}>
+      <Canvas shadows={typeof window !== 'undefined' && window.innerWidth > 768} dpr={[1, 1.5]} performance={{ min: 0.5 }}>
         <Suspense fallback={null}>
             <PerspectiveCamera makeDefault position={[0, 6, 8]} fov={50} />
             
@@ -142,7 +147,7 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
             <directionalLight 
               position={[10, 10, 5]} 
               intensity={1.5} 
-              castShadow 
+              castShadow={typeof window !== 'undefined' && window.innerWidth > 768} 
               shadow-mapSize={[512, 512]} // Reduced shadow map size for performance
             />
             <pointLight position={[-10, 5, -10]} intensity={0.8} color="#ff4d6d" />

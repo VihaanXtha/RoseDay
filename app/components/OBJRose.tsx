@@ -68,8 +68,8 @@ export const OBJRose: React.FC<OBJRoseProps> = ({
     visible: { 
       scale: 0.15 * scale, // The model might be huge, so we scale it down to fit our scene
       transition: { 
-        duration: 2, 
-        delay: delay + 1.2, // Sync with stem
+        duration: 4, // Slower animation
+        delay: delay + 1.5, // Sync with stem
         ease: [0.34, 1.56, 0.64, 1] 
       }
     }

@@ -52,7 +52,7 @@ export const Rose3D: React.FC<Rose3DProps> = ({
       scale: 1, 
       opacity: 1,
       transition: { 
-        duration: 2, 
+        duration: 4, // Slower animation
         delay: delay, 
         ease: [0.34, 1.56, 0.64, 1]
       }
