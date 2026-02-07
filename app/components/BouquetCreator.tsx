@@ -89,56 +89,14 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
         // Adjusted from 1.5 to 0.75 (2x smaller)
         const qualityMultiplier = 0.75;
 
-        // Logic for Letter "P"
-        // We check the end position (endX, endZ) which corresponds to the top view
-        // The bouquet spread is approx -5 to +5 in X and Z.
-        // Let's define P in the range: x [-2, 2], z [-3, 3]
-        // Vertical Stem: x around -1.5, z from -3 to 3
-        // Loop: Semicircle from z=0 to z=3, bulging to x=1.5
-        
-        let isLetterP = false;
-        
-        // Normalize coordinates to check shape
-        const nx = endX;
-        const nz = endZ; // Z is "up/down" in 2D top view
-        
-        // 1. Vertical Stem of P
-        // x between -2.0 and -1.0
-        // z between -3.5 and 3.5
-        if (nx > -2.0 && nx < -1.0 && nz > -3.5 && nz < 3.5) {
-            isLetterP = true;
-        }
-        
-        // 2. The Loop of P
-        // Centered roughly at x=-1.5, z=1.5
-        // We want a half-circle or box shape
-        // Top bar: z approx 3.0, x from -1.5 to 1.5
-        if (nz > 2.5 && nz < 3.5 && nx > -1.5 && nx < 1.5) {
-            isLetterP = true;
-        }
-        // Bottom bar of loop: z approx 0.0, x from -1.5 to 1.5
-        if (nz > -0.5 && nz < 0.5 && nx > -1.5 && nx < 1.5) {
-            isLetterP = true;
-        }
-        // Right vertical of loop: x approx 1.5, z from 0.0 to 3.0
-        if (nx > 1.0 && nx < 2.0 && nz > 0.0 && nz < 3.0) {
-            isLetterP = true;
-        }
-
-        // Determine Color
-        // If it's part of P, make it White/Gold. Otherwise keep Red/Pink.
-        // We use "white" (#ffffff) or maybe a soft cream (#fff0f5) to stand out against red
-        const pColor = "#ffffff"; 
-        const baseColor = Math.random() > 0.6 ? "#ff4d6d" : "#d00000";
-
         temp.push({
             id: i,
             curve,
             // Randomize delay for organic growth
-            delay: Math.random() * 3.0, 
+            delay: Math.random() * 3.0, // Slightly longer duration for more roses 
             // Varied scales
             scale: (0.025 + Math.random() * 0.025) * (1 + y * 0.2) * qualityMultiplier,
-            color: isLetterP ? pColor : baseColor 
+            color: Math.random() > 0.6 ? "#ff4d6d" : "#d00000" // Mix of red and pink
         });
     }
     return temp;
