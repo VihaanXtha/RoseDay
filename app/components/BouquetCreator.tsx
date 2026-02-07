@@ -24,7 +24,8 @@ const CameraRig = ({ step, onTransitionEnd }: { step: string, onTransitionEnd: (
   useFrame((state) => {
     if (step === 'complete' && transitionRef.current) {
       // Smoothly transition to top view
-      vec.set(0, 14, 0.1); 
+      // Zoom out more: Increase Y from 14 -> 18, Z from 0.1 -> 0.1
+      vec.set(0, 18, 0.1); 
       state.camera.position.lerp(vec, 0.02);
       state.camera.lookAt(0, 0, 0);
       
@@ -89,6 +90,9 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
         
         // Increase scale on mobile so the bouquet still looks full despite fewer roses
         const mobileScaleMultiplier = isMobile ? 2.5 : 1; 
+        
+        // High quality scale boost (20x mother instruction interpreted as making them grander)
+        const qualityMultiplier = 1.5;
 
         temp.push({
             id: i,
@@ -98,7 +102,7 @@ const BouquetCreator: React.FC<BouquetCreatorProps> = ({ onComplete }) => {
             // Varied scales - Bigger flowers (2x)
             // Original small: 0.01 ... 0.02
             // 2x bigger: 0.02 ... 0.04
-            scale: (0.025 + Math.random() * 0.025) * (1 + y * 0.2) * mobileScaleMultiplier,
+            scale: (0.025 + Math.random() * 0.025) * (1 + y * 0.2) * mobileScaleMultiplier * qualityMultiplier,
             color: Math.random() > 0.6 ? "#ff4d6d" : "#d00000" // Mix of red and pink
         });
     }
